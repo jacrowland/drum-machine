@@ -43,7 +43,7 @@ const DrumPad = (props) => {
     return () => {
       window.removeEventListener("keydown", keydownHandler);
     };
-  }, [activatePad, props.keycode]);
+  });
 
   useEffect(() => {
     audioClipEl.current.volume = props.volume / 100;
