@@ -13,18 +13,19 @@ function App() {
     alignItems: "center",
     height: "100vh",
     width: "100%",
-    backgroundColor: 'grey'
+    backgroundColor: '#543ac7'
   };
 
   const drumMachineStyles = {
     width: 750,
     height: 400,
-    backgroundColor: "lightGrey",
+    backgroundColor: "white",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     padding: 5,
-    border: "5px solid orange",
+    border: "5px solid black",
+    boxShadow: '5px 5px 0px 0px black'
   };
 
   const drumPadsStyles = {
@@ -259,7 +260,8 @@ export default App;
 const VolumeSlider = (props) => {
   const containerStyles = {
     width: "100%",
-    height: 50,
+    height: 'auto',
+    marginTop: 20,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -289,8 +291,10 @@ const Display = (props) => {
   const styles = {
     width: "200px",
     height: 50,
+    marginTop: 20,
     fontWeight: "bold",
-    backgroundColor: "darkGrey",
+    backgroundColor: "black",
+    color: 'white',
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -302,18 +306,18 @@ const Display = (props) => {
 const DrumPad = (props) => {
   const [active, setActive] = useState(false);
   const audioClipEl = useRef(null);
-  const heaterAudioClipEl = useRef(null);
 
   const styles = {
-    backgroundColor: active ? "orange" : "grey",
+    backgroundColor: active ? "#3ac76b" : "black",
+    color: 'white',
     margin: "5%",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     fontWeight: "bold",
     fontSize: "1.5rem",
-    borderRadius: "10px",
-    boxShadow: active ? "unset" : "5px 5px 0px 0px black",
+    borderRadius: "2px",
+    boxShadow: active ? "unset" : "5px 5px 0px 0px #543ac7",
   };
 
   const activatePad = () => {
@@ -326,24 +330,27 @@ const DrumPad = (props) => {
       props.bank
         ? props.updateDisplay(props.text.chord, null)
         : props.updateDisplay(props.text.heater, null);
-      const timer = setTimeout(() => setActive(false), 500);
+      const timer = setTimeout(() => setActive(false), 250);
       return () => clearTimeout(timer);
     }
   };
 
-  const keydownHandler = (e) => {
-    if (e.keyCode === props.keycode) {
-      activatePad();
-    }
-  };
-
   useEffect(() => {
-    document.addEventListener("keydown", keydownHandler);
-  }, [keydownHandler, props.power]);
+    const keydownHandler = (e) => {
+      if (e.keyCode === props.keycode) {
+        activatePad();
+      }
+    };
+
+    window.addEventListener("keydown", keydownHandler);
+    return () => {
+        window.removeEventListener("keydown", keydownHandler);
+    };
+}, [activatePad, props.keycode]);
 
   useEffect(() => {
     audioClipEl.current.volume = props.volume / 100;
-  }, []);
+  }, [props.volume]);
 
   return (
     <button
@@ -363,7 +370,8 @@ const Switch = (props) => {
   const containerStyle = {
     width: 80,
     height: 40,
-    backgroundColor: "grey",
+    backgroundColor: "black",
+    marginTop: 20
   };
 
   const toggleStyle = {
@@ -371,8 +379,7 @@ const Switch = (props) => {
     float: active ? "right" : "left",
     height: "75%",
     margin: 5,
-    backgroundColor: "darkorange",
-    borderRadius: 5,
+    backgroundColor: "#543ac7",
   };
 
   const onToggle = () => {
@@ -381,7 +388,7 @@ const Switch = (props) => {
   };
 
   return (
-    <div>
+    <>
       <div
         onClick={() => onToggle()}
         style={containerStyle}
@@ -390,6 +397,6 @@ const Switch = (props) => {
         <div style={toggleStyle} className="switch-toggle"></div>
       </div>
       <p>{props.title}</p>
-    </div>
+    </>
   );
 };
